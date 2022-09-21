@@ -1,10 +1,14 @@
-const userModel = require('../models/userModel')
+// ------- REGEX --------------
 
 function validBody(data){
     return Object.keys(data).length > 0;     
 }
 
-function validTitle(title){
+function validId(id) {
+    return mongoose.Types.ObjectId.isValid(id);
+}
+
+function validUserTitle(title){
     if(!title) return false
     if(title.match(/Mr|Miss|Mrs/)) return true
     return false
@@ -40,4 +44,47 @@ function validAddress(address){
     return false
 }
 
-module.exports = {validBody,validTitle,validName,validPhone,validMail,validPassword,validAddress}
+function validBookTitle(title){
+    if(!title) return false
+    if(/^[A-Za-z]{1,20}/.test(title)) return true
+    return false
+}
+
+function validExcerpt(excerpt){
+    if(!excerpt) return false
+    if(/^[A-Za-z]{1,100}/.test(excerpt)) return true
+    return false
+}
+
+function validISBN(ISBN){
+    if(!ISBN) return false
+    if(/^\d{13}$/.test(ISBN)) return true
+    return false
+}
+
+function validCategory(category){
+    if(!category) return false
+    if(/^[A-Za-z]{1,20}/.test(category)) return true
+    return false
+}
+
+function validSubCategory(subcategory){
+    if(!subcategory) return false
+    if(/^[A-Za-z]{1,20}/.test(subcategory)) return true
+    return false
+}
+
+function validReviews(reviews){
+    if(!reviews) return false
+    if(/^[0-9]{0,20}$/.test(reviews)) return true
+    return false
+}
+
+function validReleasedAt(releasedAt){
+    if(!releasedAt) return false
+    if(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/.test(releasedAt)) return true
+    return false
+}
+
+module.exports = {validBookTitle,validExcerpt,validISBN,validCategory,validSubCategory,validReviews,validReleasedAt,
+                    validBody,validId,validUserTitle,validName,validPhone,validMail,validPassword,validAddress}

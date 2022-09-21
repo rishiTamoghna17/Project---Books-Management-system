@@ -1,14 +1,14 @@
 const userModel = require('../models/userModel')
 const jwt = require("jsonwebtoken")
-const {validBody,validTitle,validName,validPhone,validMail,validPassword,validAddress} = require('../validator/validator.js')
+const {validBody,validUserTitle,validName,validPhone,validMail,validPassword,validAddress} = require('../validator/validator.js')
 
-const createUser = async function (req , res) {
+const createUser = async function (req,res) {
     try{
         let data = req.body
         // ----- validation start -----------
         if (!validBody(data)) return res.status(400).send({ status: false, message: "Request body can't be empty" })
         let {title,name,phone,email,password,address} = data
-        if(!validTitle(title)) return res.status(400).send({ status: false, message: "Enter title in valid format" })
+        if(!validUserTitle(title)) return res.status(400).send({ status: false, message: "Enter title in valid format" })
         if(!validName(name)) return res.status(400).send({ status: false, message: "Enter name in valid format" })
         if(!validPhone(phone)) return res.status(400).send({ status: false, message: "Enter phone in valid format" })
         let phoneExist = await userModel.findOne({phone:phone})
@@ -40,9 +40,9 @@ const logIn = async function(req,res){
         let user = await userModel.findOne({email:email,password:password}).select({"_id":1})
         if(!user) res.status(400).send({status : false , message : "Invailid mail or password"})
         // ------ End -------------
-        let token = jwt.sign({"id":user._id},"ritik's-key-for-login",{ expiresIn: '1h' })
+        let token = jwt.sign({"id":user._id},"ritik's-key-for-login",{ expiresIn: '1h'})
         res.status(201).send({status : false , data:token})
-    }   
+    }
     catch(err){
         res.status(500).send(err.message)
     }
