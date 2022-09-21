@@ -26,7 +26,10 @@ const createBook = async function (req,res) {
             if (!validReviews(reviews)) return res.status(400).send({ status: false, msg: "please provide number of reviews" })
         }
         if (!validReleasedAt(releasedAt)) return res.status(400).send({ status: false, msg: "please provide releasedAt in Date format" })
-        // -------- end --------------
+        // --------------- end ------------------------
+        // --------------- authorization --------------
+        if(userId.toString() !== req.tokenUserId) return res.status(403).send({status: false,message:"Access denied"})
+        // --------------- end ------------------------
         let savedData = await bookModel.create(data)
         res.status(201).send({ status: true,message: 'Success',data:savedData})
         }
@@ -54,16 +57,14 @@ const getBooks = async function(req,res){
         condition.subcategory = subcategory
     }
     // ------------- end -----------------
-    let books = await bookModel.find(condition).select({"title":1,"excerpt":1,"userId":1,"category":1,"releasedAt":1,"reviews":1})
+    let books = await bookModel.find(condition).select({"title":1,"excerpt":1,"userId":1,"category":1,"releasedAt":1,"reviews":1}).sort({title:1})
     if(books.length == 0) return res.status(201).send({status:false,message:'No such blog exist'})
     res.status(201).send({status:true,message:'Success',data:books})
 }
 
 const getBookById = async function (req,res){
     let bookId = req.params.bookId
-    if(!validId(bookId)) return res.status(400).send({status: false, message: "please provide a valid userId"})    
     let book = await bookModel.findById(bookId)
-    if(!book) return res.status(201).send({status:false,message:'No such blog exist'})
     res.status(201).send({ status: true,message: 'Success',data:book})
 }
 
