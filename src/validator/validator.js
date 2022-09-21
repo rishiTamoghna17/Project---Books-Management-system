@@ -1,11 +1,13 @@
 // ------- REGEX --------------
+const mongoose = require("mongoose")
 
 function validBody(data){
     return Object.keys(data).length > 0;     
 }
 
-function validId(id) {
-    return mongoose.Types.ObjectId.isValid(id);
+function validId(id){
+    if(!id) return false
+    return mongoose.Types.ObjectId.isValid(id)
 }
 
 function validUserTitle(title){
@@ -75,7 +77,6 @@ function validSubCategory(subcategory){
 }
 
 function validReviews(reviews){
-    if(!reviews) return false
     if(/^[0-9]{0,20}$/.test(reviews)) return true
     return false
 }
