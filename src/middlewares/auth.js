@@ -24,7 +24,8 @@ const authorisation = async function(req,res,next){
     try{
         let bookId = req.params.bookId
         if(!validId(bookId)) return res.status(400).send({status: false, message: "please provide a valid bookId"}) 
-        let book = await bookModel.findById(bookId)
+        let condition = {isDeleted:false,_id:bookId}
+        let book = await bookModel.findOne(condition)
         if(!book) return res.status(201).send({status:false,message:'No such book exist'})
         let userId = book.userId.toString()
         if(userId !== req.tokenUserId) return res.status(403).send({status: false,message:"Access denied"})
