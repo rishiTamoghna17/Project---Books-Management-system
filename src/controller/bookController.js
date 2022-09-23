@@ -2,7 +2,7 @@ const bookModel = require("../models/booksModel.js")
 const reviewModel = require("../models/reviewModel.js")
 const userModel = require('../models/userModel')
 const {validBookTitle,validExcerpt,validISBN,validCategory,
-    validSubCategory,validReviews,validReleasedAt,validBody,validId} = require("../validator/validator.js")
+    validSubCategory,validReviews,validDate,validBody,validId} = require("../validator/validator.js")
 
 const createBook = async function (req,res) {
     try {
@@ -26,7 +26,7 @@ const createBook = async function (req,res) {
         if(reviews){
             if (!validReviews(reviews)) return res.status(400).send({ status: false, msg: "please provide number of reviews" })
         }
-        if (!validReleasedAt(releasedAt)) return res.status(400).send({ status: false, msg: "please provide releasedAt in Date format" })
+        if (!validDate(releasedAt)) return res.status(400).send({ status: false, msg: "please provide releasedAt in Date format" })
         // --------------- end ------------------------
         // --------------- authorization --------------
         if(userId.toString() !== req.tokenUserId) return res.status(403).send({status: false,message:"Access denied"})
@@ -61,7 +61,6 @@ const getBooks = async function(req,res){
     // ------------- end -----------------
     let books = await bookModel.find(condition).select({"title":1,"excerpt":1,"userId":1,"category":1,"releasedAt":1,"reviews":1}).sort({title:1})
     if(books.length == 0) return res.status(201).send({status:false,message:'No such book exist'})
-    // books.reviewsData = await reviewModel.find({bookId : books._id})
     res.status(201).send({status:true,message:'Success',data:books})
     }
     catch(err){
@@ -72,6 +71,9 @@ const getBooks = async function(req,res){
 const getBookById = async function (req,res){
     let bookId = req.params.bookId
     let book = await bookModel.findById(bookId)
+    let reviews = await reviewModel.find({bookId:bookId})
+    book.isDeleted = "nothing"
+    console.log(book.re)
     res.status(201).send({ status: true,message: 'Success',data:book})
 }
 
@@ -99,7 +101,7 @@ const updateBook = async function(req,res){
         update.ISBN =  ISBN
     }
     if(releasedAt){
-        if (!validReleasedAt(releasedAt)) return res.status(400).send({ status: false, msg: "please provide releasedAt in Date format" })
+        if (!validDate(releasedAt)) return res.status(400).send({ status: false, msg: "please provide releasedAt in Date format" })
         update.releasedAt = releasedAt
     }
     // -------------------- end -------------------

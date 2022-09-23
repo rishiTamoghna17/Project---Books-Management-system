@@ -18,7 +18,7 @@ function validUserTitle(title){
 
 function validName(name){
     if(!name) return false
-    if(/^[A-Za-z]{1,20}/.test(name)) return true
+    if(/^[A-Za-z ]{1,20}$/.test(name)) return true
     return false
 }
 
@@ -83,7 +83,7 @@ function validReviews(reviews){
 
 function validDate(date){
     if(!date) return false
-    if(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/.test(releasedAt)) return true
+    if(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/.test(date)) return true
     return false
 }
 
