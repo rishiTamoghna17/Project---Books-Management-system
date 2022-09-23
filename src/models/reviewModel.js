@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const ObjectId = mongoose.Schema.Types.objectId
+const ObjectId = mongoose.Schema.Types.ObjectId
 
 const reviewSchema = new mongoose.Schema({
     bookId: {type:ObjectId, required:true, ref:'book'},
@@ -10,4 +10,4 @@ const reviewSchema = new mongoose.Schema({
     isDeleted: {type:Boolean, default: false}
 },  {timestamps:true})
 
-module.exports = mongoose.Model("review",reviewSchema)
+module.exports = mongoose.model("review",reviewSchema)

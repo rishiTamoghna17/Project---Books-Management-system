@@ -1,4 +1,5 @@
 const bookModel = require("../models/booksModel.js")
+const reviewModel = require("../models/reviewModel.js")
 const userModel = require('../models/userModel')
 const {validBookTitle,validExcerpt,validISBN,validCategory,
     validSubCategory,validReviews,validReleasedAt,validBody,validId} = require("../validator/validator.js")
@@ -60,6 +61,7 @@ const getBooks = async function(req,res){
     // ------------- end -----------------
     let books = await bookModel.find(condition).select({"title":1,"excerpt":1,"userId":1,"category":1,"releasedAt":1,"reviews":1}).sort({title:1})
     if(books.length == 0) return res.status(201).send({status:false,message:'No such book exist'})
+    // books.reviewsData = await reviewModel.find({bookId : books._id})
     res.status(201).send({status:true,message:'Success',data:books})
     }
     catch(err){
@@ -104,9 +106,11 @@ const updateBook = async function(req,res){
     let updatedBook = await bookModel.findByIdAndUpdate(bookId,{$set:update},{new:true})
     res.status(201).send({ status: true,message: 'Success',data:updatedBook})
 }
+
 const deleteBook = async function(req,res){
     let bookId = req.params.bookId
     let deleted = await bookModel.findByIdAndUpdate(bookId,{$set:{isDeleted:true,deletedAt:new Date()}},{new:true})
-    res.status(201).send({ status: true,message: 'Success',data:"Book deleted"})
+    res.status(201).send({ status: true,message:'deleted'})
 }
+
 module.exports = {createBook,getBooks,getBookById,updateBook,deleteBook}

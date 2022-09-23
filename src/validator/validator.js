@@ -81,11 +81,30 @@ function validReviews(reviews){
     return false
 }
 
-function validReleasedAt(releasedAt){
-    if(!releasedAt) return false
+function validDate(date){
+    if(!date) return false
     if(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/.test(releasedAt)) return true
     return false
 }
 
-module.exports = {validBookTitle,validExcerpt,validISBN,validCategory,validSubCategory,validReviews,validReleasedAt,
-                    validBody,validId,validUserTitle,validName,validPhone,validMail,validPassword,validAddress}
+function validReviewer(reviewedBy){
+    if(!reviewedBy) return false
+    if(/^[A-Za-z]{1,20}/.test(reviewedBy)) return true
+    return false
+}
+
+function validRating(rating){
+    if(!rating) return false
+    if(/^[0-9]{1,5}$/.test(rating)) return true
+    return false
+}
+
+function validReview(review){
+    if(/^[A-Za-z]{1,70}/.test(review)) return true
+    return false
+}
+
+
+module.exports = {validBookTitle,validExcerpt,validISBN,validCategory,validSubCategory,validReviews,validDate,
+                    validBody,validId,validUserTitle,validName,validPhone,validMail,validPassword,validAddress,
+                validReviewer,validRating,validReview}
