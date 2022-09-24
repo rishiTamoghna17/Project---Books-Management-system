@@ -8,9 +8,10 @@ const createReview = async function (req, res){
         if(!validId(bookId)) return res.status(400).send({status: false, message: "please provide a valid bookId"}) 
         let condition = {isDeleted:false,_id:bookId}
         let book = await bookModel.findOne(condition)
-        if(!book) return res.status(201).send({status:false,message:'No such book exist'})
+        if(!book) return res.status(404).send({status:false,message:'No such book exist'})
         let data = req.body
         data.bookId = bookId
+        
         if (!validBody(data)) return res.status(400).send({ status: false, message: "Request body can't be empty" })
         let {reviewedBy,reviewedAt,rating,review} = data
         if(!validReviewer(reviewedBy)) return res.status(400).send({status: false, message: "please provide a valid name"})
@@ -20,8 +21,7 @@ const createReview = async function (req, res){
 
         let reviewData = await reviewModel.create(data)
         let updatedBook = await bookModel.findByIdAndUpdate(bookId,{$inc:{reviews:1}},{new:true})
-        let send = {updatedBook,reviewsData:[reviewData]}
-        res.status(201).send({ status: true,message: 'Books list',data:send})
+        res.status(201).send({ status: true,message: 'Books list',data:updatedBook,reviewsData:[reviewData]})
     }
     catch(err){
         res.status(500).send({status:false,message: err.message});
@@ -58,8 +58,8 @@ const updateReview = async function(req,res){
         }
         let updatedReview = await reviewModel.findByIdAndUpdate(reviewId,{$set:update},{new:true})
         // let book = await bookModel.findById(bookId)
-        let send = {book,reviewsData:[updatedReview]}
-        res.status(201).send({ status: true,message: 'Books list',data:send})
+        //let send = {book,reviewsData:[updatedReview]}
+        res.status(201).send({ status: true,message: 'Books list',data:book,reviewsData:[updatedReview]})
     }
     catch(err){
         res.status(500).send({status:false,message: err.message});

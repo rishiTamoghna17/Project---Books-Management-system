@@ -51,7 +51,7 @@ function validExcerpt(excerpt){
 }
 
 function validISBN(ISBN){
-    if(/^\d{13}$/.test(ISBN)) return true
+    if(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/.test(ISBN)) return true
     return false
 }
 

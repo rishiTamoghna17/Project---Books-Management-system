@@ -50,7 +50,7 @@ const createBook = async function (req,res) {
         if(!subcategory) return res.status(400).send({status : false , msg : "please provide subcategory"})
         if (!validSubCategory(subcategory)) return res.status(400).send({ status: false, msg: "please provide valid subcategory" })
         
-        if(!reviews) return res.status(400).send({status : false , msg : "please provide review"})
+        //if(!reviews) return res.status(400).send({status : false , msg : "please provide review"})
         if (!validReviews(reviews)) return res.status(400).send({ status: false, msg: "please provide number of reviews" })
         
 
@@ -88,8 +88,8 @@ const getBooks = async function(req,res){
         condition.subcategory = subcategory
     }
     // ------------- end -----------------
-    let books = await bookModel.find(condition).select({"title":1,"excerpt":1,"userId":1,"category":1,"releasedAt":1,"reviews":1}).sort({title:1})
-    if(books.length == 0) return res.status(201).send({status:false,message:'No such book exist'})
+    let books = await bookModel.find(condition).select({"title":1,"excerpt":1,"userId":1,"category":1,"subcategory":1,"releasedAt":1,"reviews":1}).sort({title:1})
+    if(books.length == 0) return res.status(404).send({status:false,message:'No such book exist'})
     res.status(201).send({status:true,message:'Success',data:books})
     }
     catch(err){
@@ -102,7 +102,7 @@ const getBookById = async function (req,res){
     let book = await bookModel.findById(bookId)
     let reviews = await reviewModel.find({bookId:bookId})
     book.isDeleted = "nothing"
-    console.log(book.re)
+    
     res.status(201).send({ status: true,message: 'Success',data:book})
 }
 
@@ -141,7 +141,7 @@ const updateBook = async function(req,res){
 const deleteBook = async function(req,res){
     let bookId = req.params.bookId
     let deleted = await bookModel.findByIdAndUpdate(bookId,{$set:{isDeleted:true,deletedAt:new Date()}},{new:true})
-    res.status(201).send({ status: true,message:'deleted'})
+    res.status(200).send({ status: true,message:'deleted'})
 }
 
 module.exports = {createBook,getBooks,getBookById,updateBook,deleteBook}
