@@ -3,6 +3,9 @@ const userModel = require('../models/userModel')
 const jwt = require("jsonwebtoken")
 const { validBody, validUserTitle, validName, validPhone, validMail, validPassword, validAddress } = require('../validator/validator.js')
 
+
+// ________________________________________POST USER_________________________________________//
+
 const createUser = async function (req, res) {
     try {
         let data = req.body
@@ -38,7 +41,7 @@ const createUser = async function (req, res) {
         if (mailExist) return res.status(400).send({ status: false, message: "Email is already Exist" })
 
         if (!password) { return res.status(400).send({ msg: "please provode password" }) }
-        if (!validPassword(password)) return res.status(400).send({ status: false, message: "Please Enter Valid Password" })
+        if (!validPassword(password)) return res.status(400).send({ status: false, message: "password must contain At least capital letter small letter special caracter and number" })
 
         if (address) {
             if (!validAddress(address)) return res.status(400).send({ status: false, message: "Please Enter valid Address" })
@@ -52,6 +55,11 @@ const createUser = async function (req, res) {
         res.status(500).send(err.message)
     }
 }
+
+
+
+
+// ________________________________________LOGIN USER___________________________________________//
 
 const logIn = async function (req, res) {
     try {
@@ -70,16 +78,16 @@ const logIn = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Please provide password " })
         }
 
-        let Email = await userModel.findOne({ email: email })
-        if (!Email) return res.status(400).send({ status: false, message: "Please Provide correct Login Id" })
+        let user = await userModel.findOne({ email: email ,  password: password })
+        if (!user) return res.status(400).send({ status: false, message: "credintial not match" })
 
-        let Password = await userModel.findOne({ password: password })
-        if (!Password) return res.status(400).send({ status: false, message: "Please Provide correct Login Password" })
+        // let Password = await userModel.findOne({})
+        // if (!Password) return res.status(400).send({ status: false, message: "Please Provide correct Login Password" })
 
 
         // ------ End -------------
         let token = jwt.sign({ userId: user._id.toString() }, "group-38-key-for-login", { expiresIn: '1h' })
-        res.status(201).send({ status: false, data: token })
+        res.status(201).send({ status: true, data: token })
     }
     catch (err) {
         res.status(500).send(err.message)

@@ -9,23 +9,52 @@ const createBook = async function (req,res) {
         let data = req.body
 
         // ---------- validation start -----------------
-        if (!validBody(data)) return res.status(400).send({ status: false, message: "Request body can't be empty" })
+        if (!validBody(data)) return res.status(400).send({ status: false, message: "Please provide Details" })
         let {title,excerpt,userId,ISBN,category,subcategory,reviews,releasedAt} =  data
+
+
         if (!validBookTitle(title)) return res.status(400).send({ status: false, msg: "Please provide a valid title" })
+        if(!title){
+            return res.status(400).send({status : false , msg :"Please Provide title"})
+        }
+        
         let titleExist = await bookModel.findOne({title:title})
         if(titleExist) return res.status(400).send({ status: false, msg: "Title is already exist" })
+       
+       
         if (!validExcerpt(excerpt)) return res.status(400).send({ status: false, msg: "please enter valid excerpt" })
+       if(!excerpt){
+        return res.status(400).send({status : false , msg : "please provide Excerpt"})
+       }
+       
         if (!validId(userId)) return res.status(400).send({ status: false, msg: "please provide a valid userId" })
+      if(!userId){
+        return res.status(400).send({status : false , msg : "please Provide UserId"})
+      }
+      
         let user = await userModel.findById(userId)
         if(!user) return res.status(400).send({ status: false, message: "User not exist" })
+       
+       if(!ISBN) return res.status(400).send({status : false ,msg : "please provide ISBN"})
         if (!validISBN(ISBN)) return res.status(400).send({ status: false, msg: "please provide a valid ISBN" })
         let ISBNExist = await bookModel.findOne({ISBN:ISBN})
         if(ISBNExist) return res.status(400).send({ status: false, msg: "ISBN is already exist"})
+       
+       
         if (!validCategory(category)) return res.status(400).send({ status: false, msg: "please provide a valid category" })
-        if (!validSubCategory(subcategory)) return res.status(400).send({ status: false, msg: "please provide valid subcategory" })
-        if(reviews){
-            if (!validReviews(reviews)) return res.status(400).send({ status: false, msg: "please provide number of reviews" })
+        if(!category) {
+            return res.status(400).send({status : false , msg : "please provide category"})
         }
+        
+
+        if(!subcategory) return res.status(400).send({status : false , msg : "please provide subcategory"})
+        if (!validSubCategory(subcategory)) return res.status(400).send({ status: false, msg: "please provide valid subcategory" })
+        
+        if(!reviews) return res.status(400).send({status : false , msg : "please provide review"})
+        if (!validReviews(reviews)) return res.status(400).send({ status: false, msg: "please provide number of reviews" })
+        
+
+        if(!releasedAt) return res.status(400).send({status : false , msg : "please provide released"})
         if (!validDate(releasedAt)) return res.status(400).send({ status: false, msg: "please provide releasedAt in Date format" })
         // --------------- end ------------------------
         // --------------- authorization --------------

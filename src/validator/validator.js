@@ -32,7 +32,7 @@ function validMail(email){
 function validPassword(password){
     if(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(password)) return true
     return false
-}
+}  
 
 function validAddress(address){
     if(/^[a-zA-Z0-9\s\,\''\-]*$/.test(address.street) && /^[A-Za-z]{1,20}/.test(address.city) && 
