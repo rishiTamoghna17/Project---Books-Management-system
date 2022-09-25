@@ -1,5 +1,3 @@
-# Project---Books-Management-grp-38
-# Plutonium
 
 ## Project - Books Management
 
