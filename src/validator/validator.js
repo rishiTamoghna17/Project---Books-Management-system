@@ -67,7 +67,7 @@ function validReviewer(reviewedBy){
 }
 
 function validRating(rating){
-    return /^[0-9]{1,5}$/.test(rating)
+    return /^[0-5]{1,5}$/.test(rating)
 }
 
 function validReview(review){
