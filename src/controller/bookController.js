@@ -2,7 +2,7 @@ const bookModel = require("../models/booksModel.js")
 const reviewModel = require("../models/reviewModel.js")
 const userModel = require('../models/userModel')
 const {validBookTitle,validExcerpt,validISBN,validCategory,
-    validSubCategory,validReviews,validDate,validBody,validId} = require("../validator/validator.js")
+    validReviews,validDate,validBody,validId} = require("../validator/validator.js")
 
 const createBook = async function (req,res) {
     try {
@@ -10,21 +10,28 @@ const createBook = async function (req,res) {
         // ---------- validation start -----------------
         if (!validBody(data)) return res.status(400).send({ status: false, message: "Request body can't be empty" })
         let {title,excerpt,userId,ISBN,category,subcategory,reviews,releasedAt} =  data
+        if(!title) return res.status(400).send({ status: false, message: "Please provide book title"})
         if (!validBookTitle(title)) return res.status(400).send({ status: false,message: "Please provide title in valid format" })
         let titleExist = await bookModel.findOne({title:title})
         if(titleExist) return res.status(400).send({ status: false,message: "Title is already exist" })
+        if(!excerpt) return res.status(400).send({ status: false, message: "Please provide excerpt"})
         if (!validExcerpt(excerpt)) return res.status(400).send({ status: false,message: "Please provide excerpt in valid format" })
+        if(!userId) return res.status(400).send({ status: false, message: "Please provide userId"})
         if (!validId(userId)) return res.status(400).send({ status: false,message: "Please provide userId in valid format"})
         let user = await userModel.findById(userId)
         if(!user) return res.status(400).send({ status: false, message: "No user exist with this id"})
+        if(!ISBN) return res.status(400).send({ status: false, message: "Please provide ISBN"})
         if (!validISBN(ISBN)) return res.status(400).send({ status: false,message: "Please provide ISBN in valid format" })
         let ISBNExist = await bookModel.findOne({ISBN:ISBN})
         if(ISBNExist) return res.status(400).send({ status: false,message: "ISBN is already exist"})
+        if(!category) return res.status(400).send({ status: false, message: "Please provide category"})
         if (!validCategory(category)) return res.status(400).send({ status: false,message: "Please provide category in valid format"})
-        if (!validSubCategory(subcategory)) return res.status(400).send({ status: false,message: "Please provide subcategory in valid format"})
+        if(!subcategory) return res.status(400).send({ status: false,message: "Please provide subcategory"})
+        if(typeof subcategory !== "object") return res.status(400).send({ status: false,message: "Please provide subcategory in a array"})
         if(reviews){
             if (!validReviews(reviews)) return res.status(400).send({ status: false,message: "Please provide a number in reviews" })
         }
+        if(!releasedAt) return res.status(400).send({ status: false, message: "Please provide release date"})
         if (!validDate(releasedAt)) return res.status(400).send({ status: false,message: "Please provide releasedAt in Date format" })
         // --------------- end ------------------------
         // --------------- authorization --------------

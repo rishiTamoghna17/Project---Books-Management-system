@@ -6,6 +6,7 @@ const createReview = async function (req, res){
     try{
         let bookId= req.params.bookId
         // -------------- validations start --------------------
+        if(!bookId) return res.status(400).send({ status: false, message: "Please provide bookId"})
         if(!validId(bookId)) return res.status(400).send({status: false, message: "Please provide a valid bookId"}) 
         let condition = {isDeleted:false,_id:bookId}
         let book = await bookModel.findOne(condition)
@@ -14,8 +15,11 @@ const createReview = async function (req, res){
         if (!validBody(data)) return res.status(400).send({ status: false, message: "Request body can't be empty" })
         data.bookId = bookId
         let {reviewedBy,reviewedAt,rating,review} = data
+        if(!reviewedBy) return res.status(400).send({ status: false, message: "Please provide name of reviewer"})
         if(!validReviewer(reviewedBy)) return res.status(400).send({status: false, message: "Please provide name in valid format"})
+        if(!reviewedAt) return res.status(400).send({ status: false, message: "Please provide name of review date"})
         if(!validDate(reviewedAt)) return res.status(400).send({status: false, message: "Please provide review date in valid format"})
+        if(!rating) return res.status(400).send({ status: false, message: "Please provide rating"})
         if(!validRating(rating)) return res.status(400).send({status: false, message: "Please provide rating between 1 to 5"})
         if(review){
             if(!validReview(review)) return res.status(400).send({status: false, message: "Please provide review in valid format"})
