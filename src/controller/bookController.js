@@ -65,8 +65,9 @@ const getBooks = async function(req,res){
             condition.subcategory = subcategory
         }
         // ------------- end -----------------
-        let books = await bookModel.find(condition).select({"title":1,"excerpt":1,"userId":1,"category":1,"releasedAt":1,"reviews":1}).sort({title:1})
+        let books = await bookModel.find(condition).select({"title":1,"excerpt":1,"userId":1,"category":1,"releasedAt":1,"reviews":1})
         if(books.length == 0) return res.status(404).send({status:false,message:'No such book exist'})
+        books.sort(function (a,b){return a.title.localeCompare(b.title);})
         res.status(200).send({status:true,message:'Success',data:books})
     }
     catch(err){

@@ -51,7 +51,7 @@ const logIn = async function(req,res){
         let user = await userModel.findOne({email:email,password:password}).select({"_id":1})
         if(!user) res.status(400).send({status : false , message : "Invailid mail or password"})
         // ------ End -------------
-        let token = jwt.sign({userId:user._id.toString()},"group-38-key-for-login",{ expiresIn: '10m'})
+        let token = jwt.sign({userId:user._id.toString()},"group-38-key-for-login",{ expiresIn: '1h'})
         res.status(201).send({status:true,message:'Success',data:token})
     }
     catch(err){
