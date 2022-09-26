@@ -5,7 +5,7 @@ const {validId} = require("../validator/validator.js")
 const authentication = async function (req, res, next) {
     try{
         let token = req.headers["x-api-key"]
-        if(!token) return res.status(404).send({ status: false, message: "missing a mandatory token header" });
+        if(!token) return res.status(400).send({ status: false, message: "missing a mandatory token header" });
         try{
             const decodedToken = jwt.verify(token,"group-38-key-for-login")
             req.tokenUserId = decodedToken.userId

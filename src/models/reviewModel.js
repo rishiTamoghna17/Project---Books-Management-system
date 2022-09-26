@@ -8,6 +8,8 @@ const reviewSchema = new mongoose.Schema({
     rating: {type:Number, required:true},
     review: {type:String},
     isDeleted: {type:Boolean, default: false}
-},  {timestamps:true})
+}
+// ,{timestamps:true}
+)
 
 module.exports = mongoose.model("review",reviewSchema)
